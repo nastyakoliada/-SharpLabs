@@ -88,7 +88,7 @@ internal class Program
         position = 0;
         foreach (var line in matrix)
         {
-            if(line.Where( e=> e > 0).Select(e => true).FirstOrDefault() )
+            if (line.Any(e => e > 0))
             {
                 position++;
                 continue;
