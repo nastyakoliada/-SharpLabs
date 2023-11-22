@@ -7,7 +7,7 @@ public class MusicCatalog
     /// <summary>
     /// Перечень композиций
     /// </summary>
-    private List<Composition> Compositions { get; set; } = new List<Composition>();
+    private List<Composition> Compositions { get; } = new List<Composition>();
     /// <summary>
     /// Метод доавляет композицию к перечню
     /// </summary>
@@ -21,7 +21,7 @@ public class MusicCatalog
     /// Композиции отсортированы сначала по автору, потом по названию
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<Composition>  ListAll()
+    public IEnumerable<Composition>  EnumerateAllCompositions()
     {
         return Compositions.OrderBy(c => c.Author).ThenBy(c => c.SongName);
     }
@@ -34,8 +34,8 @@ public class MusicCatalog
     public IEnumerable<Composition> Search(string query)
     {
         return Compositions
-            .Where(c => c.Author.ToLower().Contains(query.ToLower()) 
-            || c.SongName.ToLower().Contains(query.ToLower()))
+            .Where(c => c.Author.Contains(query, StringComparison.OrdinalIgnoreCase) 
+            || c.SongName.Contains(query, StringComparison.OrdinalIgnoreCase))
             .OrderBy(c => c.Author)
             .ThenBy(c => c.SongName);
     }

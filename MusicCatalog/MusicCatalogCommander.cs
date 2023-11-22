@@ -12,26 +12,26 @@ public class MusicCatalogCommander
     /// </summary>
     public static void Run()
     {
-        WriteLine("\nПрограмма Музыкальный каталог." +
-            "\nДля работы с программой используйте следующие команды:" +
-            "\n\tAdd - добавляет композицию в каталог;" +
-            "\n\tList - выводит в консоль все композиции из каталога;" +
-            "\n\tSearch - выводит в консоль композиции, удовлетворяющие критерию поиска;" +
-            "\n\tRemove - удаляет из каталога композиции, удовлетворяющие критерию поиска;" +
-            "\n\tQuit - завершает работу с каталогом." +
-            "\nВсе команды не чувствительны к регистру.");
+        WriteLine("""
+            Программа Музыкальный каталог. 
+            Для работы с программой используйте следующие команды: 
+                Add - добавляет композицию в каталог;
+                List - выводит в консоль все композиции из каталога; 
+                Search - выводит в консоль композиции, удовлетворяющие критерию поиска; 
+                Remove - удаляет из каталога композиции, удовлетворяющие критерию поиска; 
+                Quit - завершает работу с каталогом. 
+            Все команды не чувствительны к регистру.
+            """);
 
-        MusicCatalogCommander musicCatalog = new MusicCatalogCommander();
+        var musicCatalog = new MusicCatalogCommander();
 
-        for (; ; )
+        while(!musicCatalog.IsReadyToExit)
         {
             WriteLine("\nВведите команду: ");
 
-            if (musicCatalog.Commands.TryGetValue
-                (
+            if (musicCatalog.Commands.TryGetValue(
                 (ReadLine() ?? "").ToUpper(),
-                out Action? action)
-                )
+                out Action? action))
             {
                 action();
             }
@@ -45,7 +45,7 @@ public class MusicCatalogCommander
     /// <summary>
     /// Экземпляр музыкального каталога
     /// </summary>
-    private MusicCatalog catalog = new MusicCatalog();
+    private readonly MusicCatalog catalog = new MusicCatalog();
     /// <summary>
     /// Сопоставление команд пользователя методам класса
     /// </summary>
@@ -67,14 +67,12 @@ public class MusicCatalogCommander
     /// </summary>
     public void Add()
     {
-       
         catalog.AddComposition(
-            new Composition()
+            new Composition
             {
-                Author =ReadString("Имя автора:"),
+                Author = ReadString("Имя автора:"),
                 SongName = ReadString("Название композиции:"),
-            }
-            );
+            });
     }
     /// <summary>
     /// Ввозвращает запрашиваемую строку у пользователя
@@ -97,7 +95,7 @@ public class MusicCatalogCommander
     /// </summary>
     public void List()
     {
-        PrintSongs("\nСписок всех песен:", catalog.ListAll());
+        PrintSongs("\nСписок всех песен:", catalog.EnumerateAllCompositions());
     }
     /// <summary>
     /// Метод выводит на консоль перечнь композиций
@@ -131,9 +129,14 @@ public class MusicCatalogCommander
     /// <summary>
     /// Выполняет команду пользователя о завершении работы
     /// </summary>
-    public static void Quit()
+    public void Quit()
     {
-        Environment.Exit(0);
+        IsReadyToExit = true;
+    }
+
+    public bool IsReadyToExit
+    {
+        get; private set;
     }
 }
 
